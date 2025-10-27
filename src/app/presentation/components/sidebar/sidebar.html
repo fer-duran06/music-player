@@ -1,0 +1,39 @@
+<div class="sidebar-container">
+  <!-- Header del Sidebar -->
+  <div class="sidebar-header">
+    <h2 class="sidebar-title">🎵 Music Player</h2>
+  </div>
+
+  <!-- Sección de Artistas -->
+  <div class="artists-section">
+    <h3 class="section-title">Artistas</h3>
+
+    <!-- Loading state -->
+    <div *ngIf="isLoading" class="loading-container">
+      <div class="spinner"></div>
+      <p>Cargando artistas...</p>
+    </div>
+
+    <!-- Lista de artistas -->
+    <div *ngIf="!isLoading" class="artists-list">
+      <div
+        *ngFor="let artist of artists"
+        class="artist-item"
+        [class.selected]="isSelected(artist.id)"
+        (click)="selectArtist(artist.id)"
+      >
+        <div class="artist-avatar">
+          <img [src]="artist.imageUrl" [alt]="artist.name" />
+        </div>
+        <div class="artist-info">
+          <span class="artist-name">{{ artist.name }}</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Empty state -->
+    <div *ngIf="!isLoading && artists.length === 0" class="empty-state">
+      <p>No hay artistas disponibles</p>
+    </div>
+  </div>
+</div>

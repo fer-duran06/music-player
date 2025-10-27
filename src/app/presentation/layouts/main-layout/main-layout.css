@@ -1,0 +1,53 @@
+.layout-container {
+  display: grid;
+  grid-template-areas:
+    "sidebar main"
+    "footer footer";
+  grid-template-columns: 250px 1fr;
+  grid-template-rows: 1fr 90px;
+  height: 100vh;
+  background-color: #121212;
+  color: #ffffff;
+}
+
+.sidebar {
+  grid-area: sidebar;
+  background-color: #000000;
+  overflow-y: auto;
+  border-right: 1px solid #282828;
+}
+
+.main-content {
+  grid-area: main;
+  overflow-y: auto;
+  padding: 20px;
+  background: linear-gradient(180deg, #1e1e1e 0%, #121212 100%);
+}
+
+.player-footer {
+  grid-area: footer;
+  background-color: #181818;
+  border-top: 1px solid #282828;
+}
+
+/* Scrollbar personalizado */
+.sidebar::-webkit-scrollbar,
+.main-content::-webkit-scrollbar {
+  width: 8px;
+}
+
+.sidebar::-webkit-scrollbar-track,
+.main-content::-webkit-scrollbar-track {
+  background: #121212;
+}
+
+.sidebar::-webkit-scrollbar-thumb,
+.main-content::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 4px;
+}
+
+.sidebar::-webkit-scrollbar-thumb:hover,
+.main-content::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}

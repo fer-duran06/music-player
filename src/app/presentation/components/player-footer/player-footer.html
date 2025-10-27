@@ -1,0 +1,112 @@
+<div class="player-container">
+  <!-- Información de la canción actual -->
+  <div class="track-info">
+    <div *ngIf="currentTrack" class="track-details">
+      <div class="track-cover">
+        <span class="music-icon">🎵</span>
+      </div>
+      <div class="track-text">
+        <div class="track-title">{{ currentTrack.title }}</div>
+        <div class="track-artist">{{ currentTrack.artistName }}</div>
+      </div>
+    </div>
+    <div *ngIf="!currentTrack" class="no-track">
+      <span>No hay canción seleccionada</span>
+    </div>
+  </div>
+
+  <!-- Controles principales -->
+  <div class="player-controls">
+    <!-- Botones superiores -->
+    <div class="control-buttons">
+      <!-- Shuffle -->
+      <button 
+        class="control-btn shuffle-btn" 
+        [class.active]="isShuffle"
+        (click)="toggleShuffle()"
+        title="Aleatorio"
+      >
+        🔀
+      </button>
+
+      <!-- Previous -->
+      <button 
+        class="control-btn" 
+        (click)="playPrevious()"
+        [disabled]="!currentTrack"
+        title="Anterior"
+      >
+        ⏮️
+      </button>
+
+      <!-- Play/Pause -->
+      <button 
+        class="control-btn play-btn" 
+        (click)="togglePlayPause()"
+        [disabled]="!currentTrack"
+        title="{{ isPlaying ? 'Pausar' : 'Reproducir' }}"
+      >
+        <span *ngIf="!isPlaying">▶️</span>
+        <span *ngIf="isPlaying">⏸️</span>
+      </button>
+
+      <!-- Next -->
+      <button 
+        class="control-btn" 
+        (click)="playNext()"
+        [disabled]="!currentTrack"
+        title="Siguiente"
+      >
+        ⏭️
+      </button>
+
+      <!-- Repeat -->
+      <button 
+        class="control-btn repeat-btn" 
+        [class.active]="repeatMode !== 'off'"
+        [class.repeat-one]="repeatMode === 'one'"
+        (click)="toggleRepeat()"
+        title="Repetir"
+      >
+        <span *ngIf="repeatMode === 'off'">🔁</span>
+        <span *ngIf="repeatMode === 'all'">🔁</span>
+        <span *ngIf="repeatMode === 'one'">🔂</span>
+      </button>
+    </div>
+
+    <!-- Barra de progreso -->
+    <div class="progress-container">
+      <span class="time-text">{{ formatTime(currentTime) }}</span>
+      <input 
+        type="range" 
+        class="progress-bar" 
+        [value]="currentTime"
+        [max]="currentTrack?.duration || 0"
+        (input)="onSeek($event)"
+        [disabled]="!currentTrack"
+      />
+      <span class="time-text">{{ currentTrack ? formatTime(currentTrack.duration) : '0:00' }}</span>
+    </div>
+  </div>
+
+  <!-- Control de volumen -->
+  <div class="volume-control">
+    <button 
+      class="volume-icon" 
+      (click)="toggleMute()"
+      title="{{ volume === 0 ? 'Activar sonido' : 'Silenciar' }}"
+    >
+      <span *ngIf="volume === 0">🔇</span>
+      <span *ngIf="volume > 0 && volume < 50">🔉</span>
+      <span *ngIf="volume >= 50">🔊</span>
+    </button>
+    <input 
+      type="range" 
+      class="volume-slider" 
+      min="0" 
+      max="100" 
+      [value]="volume"
+      (input)="onVolumeChange($event)"
+    />
+  </div>
+</div>

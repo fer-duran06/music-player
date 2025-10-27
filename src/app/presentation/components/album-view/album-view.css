@@ -1,0 +1,270 @@
+.album-view-container {
+  min-height: 100%;
+  color: #ffffff;
+}
+
+/* Loading state */
+.loading-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 100px 20px;
+  color: #b3b3b3;
+}
+
+.spinner {
+  width: 48px;
+  height: 48px;
+  border: 4px solid #282828;
+  border-top-color: #1db954;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-bottom: 16px;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Header del álbum */
+.album-header {
+  background: linear-gradient(180deg, #1e1e1e 0%, transparent 100%);
+  padding: 20px;
+}
+
+.back-button {
+  background: none;
+  border: none;
+  color: #ffffff;
+  font-size: 16px;
+  cursor: pointer;
+  padding: 8px 16px;
+  margin-bottom: 24px;
+  transition: opacity 0.2s ease;
+}
+
+.back-button:hover {
+  opacity: 0.7;
+}
+
+.album-hero {
+  display: flex;
+  gap: 24px;
+  align-items: flex-end;
+}
+
+.album-cover-large {
+  width: 232px;
+  height: 232px;
+  background-color: #282828;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 96px;
+  flex-shrink: 0;
+  box-shadow: 0 4px 60px rgba(0, 0, 0, 0.5);
+}
+
+.album-details {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.album-type {
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.album-title-large {
+  font-size: 48px;
+  font-weight: 900;
+  margin: 0;
+  line-height: 1.2;
+}
+
+.album-meta {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  color: #b3b3b3;
+  flex-wrap: wrap;
+}
+
+.album-artist-name {
+  font-weight: 700;
+  color: #ffffff;
+}
+
+.separator {
+  color: #b3b3b3;
+}
+
+/* Controles */
+.album-controls {
+  padding: 24px 20px;
+  display: flex;
+  gap: 16px;
+  align-items: center;
+}
+
+.play-album-button {
+  background-color: #1db954;
+  color: #ffffff;
+  border: none;
+  padding: 14px 32px;
+  border-radius: 500px;
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.play-album-button:hover {
+  background-color: #1ed760;
+  transform: scale(1.04);
+}
+
+/* Lista de canciones */
+.tracks-section {
+  padding: 0 20px 40px;
+}
+
+.tracks-header {
+  display: grid;
+  grid-template-columns: 40px 1fr 60px;
+  gap: 16px;
+  padding: 8px 16px;
+  border-bottom: 1px solid #282828;
+  color: #b3b3b3;
+  font-size: 12px;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 8px;
+}
+
+.track-number {
+  text-align: center;
+}
+
+.track-title-header {
+  text-align: left;
+}
+
+.tracks-list {
+  display: flex;
+  flex-direction: column;
+}
+
+.track-item {
+  display: grid;
+  grid-template-columns: 40px 1fr 60px;
+  gap: 16px;
+  padding: 8px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  align-items: center;
+}
+
+.track-item:hover {
+  background-color: #282828;
+}
+
+.track-item.playing {
+  background-color: #1a1a1a;
+}
+
+.track-item .track-number {
+  text-align: center;
+  color: #b3b3b3;
+  font-size: 14px;
+}
+
+.playing-icon {
+  color: #1db954;
+  font-size: 16px;
+}
+
+.track-info {
+  min-width: 0;
+}
+
+.track-title {
+  font-size: 16px;
+  color: #ffffff;
+  margin-bottom: 4px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.track-title.playing-text {
+  color: #1db954;
+}
+
+.track-artist {
+  font-size: 14px;
+  color: #b3b3b3;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.track-item .track-duration {
+  text-align: right;
+  color: #b3b3b3;
+  font-size: 14px;
+}
+
+/* Error state */
+.error-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 100px 20px;
+  text-align: center;
+  color: #b3b3b3;
+}
+
+.error-state p {
+  font-size: 18px;
+  margin-bottom: 24px;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .album-hero {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
+  .album-title-large {
+    font-size: 32px;
+  }
+
+  .album-cover-large {
+    width: 192px;
+    height: 192px;
+    font-size: 72px;
+  }
+
+  .tracks-header {
+    grid-template-columns: 40px 1fr 60px;
+  }
+
+  .track-item {
+    grid-template-columns: 40px 1fr 60px;
+  }
+}

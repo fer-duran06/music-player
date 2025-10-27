@@ -1,0 +1,71 @@
+<div class="main-view-container">
+  <!-- Header -->
+  <div class="view-header">
+    <h1 class="view-title">Inicio</h1>
+  </div>
+
+  <!-- Reproducidos recientemente -->
+  <section class="albums-section" *ngIf="recentAlbums.length > 0">
+    <h2 class="section-title">Reproducidos recientemente</h2>
+    
+    <div class="albums-grid">
+      <div 
+        *ngFor="let album of recentAlbums" 
+        class="album-card"
+        (click)="openAlbum(album.id)"
+      >
+        <div class="album-cover">
+          <div class="album-image">
+            <span class="album-icon">💿</span>
+          </div>
+          <button class="play-button" title="Reproducir">
+            ▶️
+          </button>
+        </div>
+        <div class="album-info">
+          <h3 class="album-title">{{ album.title }}</h3>
+          <p class="album-artist">{{ album.artistName }}</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Todos los álbumes -->
+  <section class="albums-section">
+    <h2 class="section-title">Todos los álbumes</h2>
+    
+    <!-- Loading state -->
+    <div *ngIf="isLoadingAll" class="loading-container">
+      <div class="spinner"></div>
+      <p>Cargando álbumes...</p>
+    </div>
+
+    <!-- Albums grid -->
+    <div *ngIf="!isLoadingAll" class="albums-grid">
+      <div 
+        *ngFor="let album of allAlbums" 
+        class="album-card"
+        (click)="openAlbum(album.id)"
+      >
+        <div class="album-cover">
+          <div class="album-image">
+            <span class="album-icon">💿</span>
+          </div>
+          <button class="play-button" title="Reproducir">
+            ▶️
+          </button>
+        </div>
+        <div class="album-info">
+          <h3 class="album-title">{{ album.title }}</h3>
+          <p class="album-artist">{{ album.artistName }}</p>
+          <p class="album-year">{{ album.releaseYear }}</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Empty state -->
+    <div *ngIf="!isLoadingAll && allAlbums.length === 0" class="empty-state">
+      <p>No hay álbumes disponibles</p>
+    </div>
+  </section>
+</div>

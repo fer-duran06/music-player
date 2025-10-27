@@ -1,0 +1,82 @@
+<div class="album-view-container">
+  <!-- Loading state -->
+  <div *ngIf="isLoading" class="loading-container">
+    <div class="spinner"></div>
+    <p>Cargando álbum...</p>
+  </div>
+
+  <!-- Album content -->
+  <div *ngIf="!isLoading && album" class="album-content">
+    <!-- Header del álbum -->
+    <div class="album-header">
+      <button class="back-button" (click)="goBack()">
+        ← Volver
+      </button>
+
+      <div class="album-hero">
+        <div class="album-cover-large">
+          <span class="album-icon-large">💿</span>
+        </div>
+
+        <div class="album-details">
+          <span class="album-type">ÁLBUM</span>
+          <h1 class="album-title-large">{{ album.title }}</h1>
+          <div class="album-meta">
+            <span class="album-artist-name">{{ album.artistName }}</span>
+            <span class="separator">•</span>
+            <span>{{ album.releaseYear }}</span>
+            <span class="separator">•</span>
+            <span>{{ tracks.length }} canciones</span>
+            <span class="separator">•</span>
+            <span>{{ getTotalDuration() }}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Controles del álbum -->
+    <div class="album-controls">
+      <button class="play-album-button" (click)="playAlbum()">
+        ▶️ Reproducir álbum
+      </button>
+    </div>
+
+    <!-- Lista de canciones -->
+    <div class="tracks-section">
+      <div class="tracks-header">
+        <span class="track-number">#</span>
+        <span class="track-title-header">TÍTULO</span>
+        <span class="track-duration">⏱️</span>
+      </div>
+
+      <div class="tracks-list">
+        <div 
+          *ngFor="let track of tracks; let i = index" 
+          class="track-item"
+          [class.playing]="isPlaying(track.id)"
+          (click)="playTrack(track, i)"
+        >
+          <span class="track-number">
+            <span *ngIf="!isPlaying(track.id)">{{ track.trackNumber }}</span>
+            <span *ngIf="isPlaying(track.id)" class="playing-icon">🔊</span>
+          </span>
+          
+          <div class="track-info">
+            <div class="track-title" [class.playing-text]="isPlaying(track.id)">
+              {{ track.title }}
+            </div>
+            <div class="track-artist">{{ track.artistName }}</div>
+          </div>
+
+          <span class="track-duration">{{ track.getFormattedDuration() }}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Error state -->
+  <div *ngIf="!isLoading && !album" class="error-state">
+    <p>No se pudo cargar el álbum</p>
+    <button class="back-button" (click)="goBack()">Volver al inicio</button>
+  </div>
+</div>
