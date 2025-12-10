@@ -1,0 +1,185 @@
+import { Component, OnInit, OnDestroy } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
+import { Observable, of, Subject } from 'rxjs';
+import { debounceTime, distinctUntilChanged, switchMap, catchError, takeUntil } from 'rxjs/operators';
+import { ISearchUseCases } from '../../../../core/domain/ports/in/i-search.use-cases';
+import { IPlayerUseCases } from '../../../../core/domain/ports/in/i-player.use-cases';
+import { IMusicRepository } from '../../../../core/domain/ports/out/i-music.repository';
+import { SearchResult, SearchTrack } from '../../../../core/domain/models/search.model';
+import { Song } from '../../../../core/domain/models/song.model';
+
+@Component({
+  selector: 'app-search-view',
+  templateUrl: './search-view.component.html',
+  styleUrls: ['./search-view.component.css'],
+  standalone: false
+})
+export class SearchViewComponent implements OnInit, OnDestroy {
+  searchQuery: string = '';
+  searchResults$: Observable<SearchResult | null> = of(null);
+  isLoading: boolean = false;
+  hasSearched: boolean = false;
+  
+  // variables para Autocompletado
+  showSuggestions: boolean = false;
+  suggestions: string[] = [];
+  private debounceTimer: any;
+  private destroy$ = new Subject<void>();
+
+  constructor(
+    private route: ActivatedRoute,
+    private router: Router,
+    private searchUseCases: ISearchUseCases,
+    private playerUseCases: IPlayerUseCases,
+    private musicRepository: IMusicRepository
+  ) {}
+
+  ngOnInit(): void {
+    //escucha cambios en la URL (no se pierde la busqueda)
+    this.route.queryParams
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(params => {
+        const query = params['q'];
+        if (query) {
+          this.searchQuery = query;
+          this.performSearch(query);
+        }
+      });
+  }
+
+  ngOnDestroy(): void {
+    //hace limipieza de memoria
+    this.destroy$.next();
+    this.destroy$.complete();
+    
+    if (this.debounceTimer) {
+      clearTimeout(this.debounceTimer);
+    }
+  }
+
+  //metodo llamado cuando el usuario presiona enter
+  onSearchInput(): void {
+    if (this.searchQuery.trim().length > 0) {
+      //actualiza la url para reflejar la busqueda
+      this.router.navigate([], {
+        relativeTo: this.route,
+        queryParams: { q: this.searchQuery },
+        queryParamsHandling: 'merge'
+      });
+      
+      //hace la busqueda real 
+      this.performSearch(this.searchQuery);
+    }
+  }
+
+  onSearchInputWithDebounce(): void {
+    if (this.debounceTimer) {
+      clearTimeout(this.debounceTimer);
+    }
+
+    this.updateSuggestions();
+
+    this.debounceTimer = setTimeout(() => {
+      if (this.searchQuery.trim().length > 0) {
+        this.onSearchInput();
+      }
+    }, 500);
+  }
+
+  updateSuggestions(): void {
+    if (this.searchQuery.trim().length === 0) {
+      this.suggestions = [];
+      return;
+    }
+
+    const query = this.searchQuery.toLowerCase();
+    const history = this.searchUseCases.getSearchHistory();
+    
+    this.suggestions = history
+      .filter(item => item.toLowerCase().includes(query))
+      .slice(0, 5);
+
+    if (this.suggestions.length === 0 && this.searchQuery.trim().length > 2) {
+      this.suggestions = [this.searchQuery];
+    }
+  }
+
+  selectSuggestion(suggestion: string): void {
+    this.searchQuery = suggestion;
+    this.showSuggestions = false;
+    this.onSearchInput();
+  }
+
+  hideSuggestions(): void {
+    setTimeout(() => {
+      this.showSuggestions = false;
+    }, 200);
+  }
+
+  //flujo principal de busqueda
+  performSearch(query: string): void {
+    if (!query || query.trim().length === 0) {
+      this.searchResults$ = of(null);
+      this.hasSearched = false;
+      return;
+    }
+
+    this.isLoading = true;
+    this.hasSearched = true;
+    
+    this.searchResults$ = this.searchUseCases.search(query).pipe(
+      debounceTime(300),
+      distinctUntilChanged(),
+      switchMap(results => {
+        this.isLoading = false;
+        return of(results);
+      }),
+      catchError(error => {
+        console.error('Error en búsqueda:', error);
+        this.isLoading = false;
+        return of(null);
+      }),
+      takeUntil(this.destroy$)
+    );
+  }
+
+  //mapeo para reproducir una cancion desde los resultados de busqueda
+  playTrack(track: SearchTrack): void {
+    const song: Song = {
+      id: track.id,
+      title: track.name,
+      artist: track.artists,
+      album: track.album,
+      imageUrl: track.imageUrl,
+      previewUrl: track.previewUrl
+    };
+    
+    this.playerUseCases.playSong(song);
+  }
+
+  loadAlbum(albumId: string): void {
+    this.musicRepository.getAlbumTracks(albumId)
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(songs => {
+        if (songs.length > 0) {
+          this.playerUseCases.playSong(songs[0]);
+        }
+      });
+  }
+
+  goBack(): void {
+    this.router.navigate(['/']);
+  }
+
+  //limpia el estado de busqueda
+  clearSearch(): void {
+    this.searchQuery = '';
+    this.searchResults$ = of(null);
+    this.hasSearched = false;
+    this.suggestions = [];
+    this.router.navigate([], {
+      relativeTo: this.route,
+      queryParams: {}
+    });
+  }
+}

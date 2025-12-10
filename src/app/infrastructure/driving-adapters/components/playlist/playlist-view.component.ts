@@ -1,0 +1,125 @@
+import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
+import { Observable, BehaviorSubject, combineLatest } from 'rxjs';
+import { map, take } from 'rxjs/operators';
+import { IPlayerUseCases } from '../../../../core/domain/ports/in/i-player.use-cases';
+import { Song } from '../../../../core/domain/models/song.model';
+import { PlayerState } from '../../../../core/domain/models/player-state.model';
+
+@Component({
+  selector: 'app-playlist-view',
+  templateUrl: './playlist-view.component.html',
+  styleUrls: ['./playlist-view.component.css'], 
+  standalone: false
+})
+export class PlaylistViewComponent implements OnInit {
+
+  playlist$!: Observable<Song[]>;
+  filteredSongs$!: Observable<Song[]>;
+  currentSong$: Observable<Song | null>;
+  isPlaying$: Observable<boolean>;
+  playerState$: Observable<PlayerState>;
+  
+  searchQuery: string = '';
+  playlistTitle: string = 'Reproductor Angular';
+  
+  private searchQuery$ = new BehaviorSubject<string>('');
+  private playlistId = '21c43e822a344d759434af785b7dd94a';
+
+  constructor(
+    private playerUseCases: IPlayerUseCases,
+    private router: Router
+  ) {
+    this.playerState$ = this.playerUseCases.getState();
+    this.currentSong$ = this.playerState$.pipe(map(s => s.currentSong));
+    this.isPlaying$ = this.playerState$.pipe(map(s => s.isPlaying));
+  }
+
+  ngOnInit(): void {
+    console.log('Cargando playlist ID:', this.playlistId);
+    this.playlist$ = this.playerUseCases.loadSongs(this.playlistId);
+    
+    this.filteredSongs$ = combineLatest([
+      this.playlist$,
+      this.searchQuery$
+    ]).pipe(
+      map(([songs, query]) => {
+        if (!query || query.trim() === '') {
+          return songs;
+        }
+        
+        const lowerQuery = query.toLowerCase().trim();
+        return songs.filter(song => 
+          song.title.toLowerCase().includes(lowerQuery) ||
+          song.artist.toLowerCase().includes(lowerQuery) ||
+          song.album.toLowerCase().includes(lowerQuery)
+        );
+      })
+    );
+    
+    this.playlist$.subscribe({
+      next: (songs) => {
+        console.log('Canciones cargadas:', songs.length);
+      },
+      error: (error) => {
+        console.error('Error al cargar:', error);
+      }
+    });
+  }
+
+  onSearchFocus(): void {
+    if (this.searchQuery && this.searchQuery.trim().length > 0) {
+      this.navigateToSearch();
+    } else {
+      this.router.navigate(['/search']);
+    }
+  }
+
+  navigateToSearch(): void {
+    if (this.searchQuery && this.searchQuery.trim().length > 0) {
+      this.router.navigate(['/search'], { 
+        queryParams: { q: this.searchQuery } 
+      });
+    } else {
+      this.router.navigate(['/search']);
+    }
+  }
+
+  onSearchInput(): void {
+    this.searchQuery$.next(this.searchQuery);
+  }
+
+  onSongClick(song: Song): void {
+    console.log('🎵 Reproduciendo:', song.title);
+    this.playerUseCases.playSong(song);
+  }
+
+  onIndicatorClick(event: Event): void {
+    event.stopPropagation();
+    this.isPlaying$.pipe(take(1)).subscribe(isPlaying => {
+      if (isPlaying) {
+        this.playerUseCases.pause();
+      } else {
+        this.playerUseCases.resume();
+      }
+    });
+  }
+
+  onPlayPauseClick(): void {
+    this.isPlaying$.pipe(take(1)).subscribe(isPlaying => {
+      if (isPlaying) {
+        this.playerUseCases.pause();
+      } else {
+        this.playerUseCases.resume();
+      }
+    });
+  }
+
+  onNextClick(): void {
+    this.playerUseCases.playNext();
+  }
+
+  onPreviousClick(): void {
+    this.playerUseCases.playPrevious();
+  }
+}

@@ -1,0 +1,80 @@
+/* src/app/app.css */
+
+/* Estilos Globales del Contenedor */
+.app-container {
+  display: flex;
+  flex-direction: column;
+  height: 100vh; /* Ocupa toda la altura de la pantalla */
+  background-color: #0a0a0a; /* TU FONDO NEGRO FINAL */
+  color: white;
+  overflow: hidden;
+}
+
+/* Sección Central (Donde van Sidebar y Buscador) */
+.middle-section {
+  display: flex;
+  flex: 1; /* Ocupa todo el espacio que sobra (menos el reproductor) */
+  overflow: hidden;
+}
+
+/* --- TU BARRA LATERAL (SIDEBAR) --- */
+.sidebar {
+  width: 240px; /* Ancho fijo */
+  background-color: #121212; /* Un gris apenas más claro */
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  border-right: 1px solid #2a2a2a; /* Línea separadora sutil */
+}
+
+.library-title {
+  color: #ff3b3b; /* TU ROJO */
+  font-size: 1.2rem;
+  font-weight: bold;
+  margin-bottom: 10px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.library-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.library-list li {
+  padding: 12px 0;
+  color: #b3b3b3;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 500;
+  border-bottom: 1px solid #1a1a1a;
+}
+
+.library-list li:hover {
+  color: white;
+  padding-left: 5px; /* Efecto de movimiento */
+  border-left: 3px solid #ff3b3b;
+}
+
+/* --- CONTENIDO PRINCIPAL --- */
+.main-content {
+  flex: 1; /* Toma el resto del ancho */
+  position: relative;
+  overflow-y: auto; /* Scroll independiente para los resultados */
+  background-color: #0a0a0a;
+}
+
+/* Estilo para la barra de scroll */
+.main-content::-webkit-scrollbar {
+  width: 8px;
+  background: #0a0a0a;
+}
+.main-content::-webkit-scrollbar-thumb {
+  background: #333;
+  border-radius: 4px;
+}

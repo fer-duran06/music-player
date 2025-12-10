@@ -1,0 +1,356 @@
+/* =========================================
+   CONTENEDOR PRINCIPAL (GRID 2 COLUMNAS)
+   ========================================= */
+.playlist-view {
+  display: grid;
+  grid-template-columns: 350px 1fr; /* Lista izq - Album der */
+  height: 100%;
+  gap: 0;
+  /* CAMBIO: Adiós gradiente azul, hola fondo negro */
+  background-color: #0a0a0a;
+  overflow: hidden;
+  color: white;
+}
+
+/* =========================================
+   PANEL IZQUIERDO: LISTA DE CANCIONES
+   ========================================= */
+.song-list-panel {
+  background-color: #121212; /* Gris muy oscuro */
+  padding: 0;
+  overflow-y: auto;
+  border-right: 1px solid #2a2a2a; /* Borde sutil */
+  display: flex;
+  flex-direction: column;
+}
+
+/* Scrollbar personalizada oscura */
+.song-list-panel::-webkit-scrollbar {
+  width: 8px;
+}
+.song-list-panel::-webkit-scrollbar-track {
+  background: #0a0a0a;
+}
+.song-list-panel::-webkit-scrollbar-thumb {
+  background: #333;
+  border-radius: 4px;
+}
+.song-list-panel::-webkit-scrollbar-thumb:hover {
+  background: #ff3b3b; /* Rojo al agarrar el scroll */
+}
+
+/* Barra de búsqueda (Sticky top) */
+.song-list-panel .search-bar-container {
+  padding: 20px;
+  background-color: #121212; /* Mismo fondo que el panel */
+  border-bottom: 1px solid #2a2a2a;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.song-list-panel .search-bar-container .search-input {
+  width: 100%;
+  padding: 12px 24px;
+  font-size: 0.95rem;
+  font-weight: 500;
+  border: 1px solid transparent;
+  border-radius: 30px;
+  /* Input oscuro */
+  background-color: #1a1a1a; 
+  color: #fff;
+  outline: none;
+  transition: all 0.3s ease;
+  cursor: text;
+}
+
+.song-list-panel .search-bar-container .search-input::placeholder {
+  color: #666;
+  font-weight: 500;
+  letter-spacing: 1px;
+}
+
+.song-list-panel .search-bar-container .search-input:focus {
+  background-color: #222;
+  border-color: #ff3b3b; /* Borde rojo al escribir */
+  box-shadow: 0 0 10px rgba(255, 59, 59, 0.2);
+}
+
+/* Título de la Playlist */
+.song-list-panel .playlist-title {
+  font-size: 1.5rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  color: #fff;
+  margin: 0;
+  padding: 20px;
+  border-bottom: 2px solid #ff3b3b; /* Línea roja decorativa */
+  letter-spacing: 1px;
+  background-color: #121212;
+  position: sticky;
+  top: 78px; /* Ajustado para que quede bajo el buscador */
+  z-index: 9;
+}
+
+/* Contenedor de la lista */
+.song-list-panel .song-list {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 10px 15px 20px 15px;
+  flex: 1;
+}
+
+/* ITEMS DE CANCIONES INDIVIDUALES */
+.song-list-panel .song-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 16px;
+  background-color: transparent;
+  border-left: 3px solid transparent;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-weight: 500;
+  color: #b3b3b3; /* Texto gris claro */
+  border-radius: 4px;
+}
+
+.song-list-panel .song-item:hover {
+  background-color: #1f1f1f;
+  border-left-color: #ff3b3b; /* Borde rojo */
+  color: white;
+  transform: translateX(5px);
+}
+
+.song-list-panel .song-item.active {
+  background-color: #252525;
+  border-left-color: #ff3b3b;
+  font-weight: 700;
+  color: #fff;
+}
+
+.song-list-panel .song-item .song-name {
+  flex: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Icono de reproducción */
+.song-list-panel .song-item .playing-indicator {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #ff3b3b; /* Icono rojo */
+  margin-left: 10px;
+  font-size: 1.2rem;
+}
+
+/* Mensaje "No results" */
+.song-list-panel .no-results {
+  text-align: center;
+  padding: 40px 20px;
+  color: #666;
+}
+
+/* =========================================
+   PANEL DERECHO: DETALLE DEL ÁLBUM
+   ========================================= */
+.album-panel {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px;
+  /* Fondo negro sólido */
+  background-color: #0a0a0a; 
+}
+
+.album-panel .album-art-container {
+  max-width: 550px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 30px;
+}
+
+/* Carátula del Álbum */
+.album-panel .album-cover-wrapper {
+  position: relative;
+  width: 100%;
+  max-width: 400px; /* Un poco más chico para que quepa bien */
+  aspect-ratio: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.album-panel .album-cover-wrapper .album-cover {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 8px;
+  /* Sombra roja sutil */
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8);
+  transition: transform 0.3s ease;
+}
+
+.album-panel .album-cover-wrapper .album-cover:hover {
+  transform: scale(1.02);
+}
+
+/* Etiqueta flotante sobre el álbum */
+.album-panel .album-cover-wrapper .album-title-overlay {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  background: rgba(0, 0, 0, 0.8); /* Fondo oscuro */
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: #ff3b3b; /* Texto rojo */
+  border: 1px solid #333;
+}
+
+/* Información de la canción actual */
+.album-panel .now-playing-info {
+  text-align: center;
+  width: 100%;
+}
+
+.album-panel .now-playing-info .track-name {
+  font-size: 2rem;
+  font-weight: 800;
+  color: #fff; /* Blanco */
+  margin: 0 0 10px 0;
+  letter-spacing: -0.5px;
+}
+
+.album-panel .now-playing-info .artist-name {
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: #ff3b3b; /* Artista en rojo */
+  margin: 0;
+  text-transform: uppercase;
+}
+
+/* Controles de reproducción grandes (Panel derecho) */
+.album-panel .playback-controls {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+}
+
+/* Slider de progreso */
+.album-panel .playback-controls .progress-slider {
+  width: 100%;
+  height: 6px;
+  -webkit-appearance: none;
+  appearance: none;
+  background: #333; /* Riel gris oscuro */
+  border-radius: 4px;
+  outline: none;
+  cursor: pointer;
+}
+
+.album-panel .playback-controls .progress-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 16px;
+  height: 16px;
+  background: #ff3b3b; /* Bolita roja */
+  border-radius: 50%;
+  cursor: pointer;
+  box-shadow: 0 0 10px rgba(255, 59, 59, 0.5);
+  transition: transform 0.2s;
+}
+
+.album-panel .playback-controls .progress-slider::-webkit-slider-thumb:hover {
+  transform: scale(1.3);
+}
+
+/* Botones de control */
+.album-panel .playback-controls .control-buttons {
+  display: flex;
+  align-items: center;
+  gap: 30px;
+}
+
+.album-panel .playback-controls .control-buttons .btn-control {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #666;
+  padding: 0;
+  transition: all 0.2s ease;
+  font-size: 2rem;
+  display: flex;
+}
+
+.album-panel .playback-controls .control-buttons .btn-control:hover {
+  color: white;
+  transform: scale(1.1);
+}
+
+.album-panel .playback-controls .control-buttons .btn-control.btn-play-pause {
+  color: #ff3b3b; /* Botón Play en rojo */
+  font-size: 3rem;
+}
+
+.album-panel .playback-controls .control-buttons .btn-control.btn-play-pause:hover {
+  color: #ff5252;
+  transform: scale(1.15);
+  text-shadow: 0 0 15px rgba(255, 59, 59, 0.4);
+}
+
+/* Estado Vacío (Cuando no hay canción seleccionada) */
+.album-panel .no-selection {
+  text-align: center;
+  color: #444;
+}
+
+.album-panel .no-selection .empty-state .empty-icon {
+  font-size: 5rem;
+  color: #333;
+  margin-bottom: 20px;
+}
+
+.album-panel .no-selection p {
+  color: #666;
+}
+
+.album-panel .no-selection p:first-child {
+  font-size: 1.5rem;
+  font-weight: 800;
+  letter-spacing: 2px;
+  color: #fff;
+  margin-bottom: 10px;
+}
+
+/* Animaciones */
+@keyframes pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.7; transform: scale(0.9); }
+}
+
+/* Responsive */
+@media (max-width: 900px) {
+  .playlist-view {
+    grid-template-columns: 1fr;
+    grid-template-rows: 40% 60%; /* Divide pantalla en móvil */
+  }
+
+  .song-list-panel {
+    border-right: none;
+    border-bottom: 1px solid #333;
+  }
+}

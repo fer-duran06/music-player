@@ -1,0 +1,97 @@
+
+<div class="playlist-view">
+  <div class="song-list-panel">
+    <div class="search-bar-container">
+      <input 
+        type="text" 
+        class="search-input" 
+        placeholder="🔍 BUSCAR MÚSICA..."
+        [(ngModel)]="searchQuery"
+        (keyup.enter)="navigateToSearch()"
+        (focus)="onSearchFocus()">
+    </div>
+
+    <h2 class="playlist-title">{{ playlistTitle }}</h2>
+    
+    <div class="song-list">
+      <div 
+        *ngFor="let song of (filteredSongs$ | async); let i = index"
+        class="song-item"
+        [class.active]="song.id === (currentSong$ | async)?.id"
+        (click)="onSongClick(song)">
+        
+        <span class="song-name">{{ song.title }}</span>
+        
+        <button 
+          *ngIf="song.id === (currentSong$ | async)?.id" 
+          class="playing-indicator"
+          [class.playing]="(isPlaying$ | async)"
+          (click)="onIndicatorClick($event)">
+          <span class="icon">{{ (isPlaying$ | async) ? '▶' : '▶' }}</span>
+        </button>
+      </div>
+    </div>
+
+    <div *ngIf="(filteredSongs$ | async)?.length === 0 && searchQuery" class="no-results">
+      <p>No se encontraron canciones</p>
+    </div>
+  </div>
+
+  <div class="album-panel">
+    <ng-container *ngIf="(currentSong$ | async) as song; else noSelection">
+      <div class="album-art-container">
+        <div class="album-cover-wrapper">
+          <img [src]="song.imageUrl" alt="Album Cover" class="album-cover">
+          <div class="album-title-overlay">{{ song.album }}</div>
+        </div>
+
+        <div class="now-playing-info">
+          <h3 class="track-name">{{ song.title }}</h3>
+          <p class="artist-name">{{ song.artist }}</p>
+        </div>
+
+        <div class="playback-controls">
+          <input 
+            type="range" 
+            class="progress-slider" 
+            min="0" 
+            max="100" 
+            [value]="(playerState$ | async)?.progress || 0">
+          
+          <div class="control-buttons">
+            <button 
+              class="btn-control btn-prev" 
+              title="Anterior"
+              (click)="onPreviousClick()">
+              <span class="icon">⏮</span>
+            </button>
+
+            <button 
+              class="btn-control btn-play-pause" 
+              (click)="onPlayPauseClick()"
+              [title]="(isPlaying$ | async) ? 'Pausar' : 'Reproducir'">
+              <span class="icon">{{ (isPlaying$ | async) ? '▶' : '▶' }}</span>
+            </button>
+
+            <button 
+              class="btn-control btn-next" 
+              title="Siguiente"
+              (click)="onNextClick()">
+              <span class="icon">⏭</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </ng-container>
+
+    <ng-template #noSelection>
+      <div class="no-selection">
+        <p>ESTAS ESCUCHANDO</p>
+        <div class="empty-state">
+          <div class="empty-icon">♪</div>
+          <p>Selecciona una canción para reproducir</p>
+        </div>
+      </div>
+    </ng-template>
+  </div>
+</div>

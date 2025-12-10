@@ -1,0 +1,334 @@
+/* =========================================
+   BARRA DE REPRODUCCIÓN (Estilo Red & Black)
+   ========================================= */
+
+/* 1. El contenedor principal (La franja roja) */
+.controls-container {
+  display: grid;
+  grid-template-columns: 1fr 2fr 1fr; /* Izquierda, Centro, Derecha */
+  align-items: center;
+  padding: 0 24px;
+  height: 90px; /* Altura de la barra */
+  gap: 16px;
+  /* CAMBIO: Fondo Rojo Intenso según tu diseño */
+  background-color: #D32F2F; 
+  box-shadow: 0 -4px 15px rgba(0,0,0,0.3);
+  z-index: 100;
+  position: relative;
+}
+
+/* =========================================
+   IZQUIERDA: INFORMACIÓN DE LA CANCIÓN
+   ========================================= */
+.song-info {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  min-width: 180px;
+}
+
+.song-info img {
+  width: 56px;
+  height: 56px;
+  border-radius: 6px; /* Un poco más redondeado */
+  object-fit: cover;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.4);
+}
+
+.song-info .song-details {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+  flex: 1;
+}
+
+.song-info .song-details .song-title {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: #fff; /* Texto blanco sobre fondo rojo */
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.song-info .song-details .song-artist {
+  font-size: 0.75rem;
+  color: rgba(255, 255, 255, 0.8); /* Blanco con transparencia */
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.song-info .song-details .song-artist:hover,
+.song-info .song-details .song-title:hover {
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+/* Botón de Like (Corazón) */
+.song-info .btn-heart {
+  background: none;
+  border: none;
+  color: rgba(255, 255, 255, 0.7);
+  cursor: pointer;
+  padding: 8px;
+  transition: transform 0.2s, color 0.2s;
+}
+
+.song-info .btn-heart:hover {
+  color: #fff;
+  transform: scale(1.1);
+}
+
+.song-info .btn-heart svg {
+  display: block;
+}
+
+/* =========================================
+   CENTRO: CONTROLES (La Cápsula Negra)
+   ========================================= */
+.player-center {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  
+  /* CAMBIO CLAVE: Estilo cápsula negra */
+  background-color: #0a0a0a; 
+  padding: 10px 30px;
+  border-radius: 40px; /* Bordes muy redondos */
+  max-width: 500px;
+  margin: 0 auto; /* Centrado */
+  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+}
+
+.player-center .player-controls {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  width: 100%;
+}
+
+/* Botones secundarios (Shuffle, Prev, Next, Repeat) */
+.player-center .player-controls .control-btn {
+  background: none;
+  border: none;
+  color: #555; /* Gris oscuro por defecto */
+  cursor: pointer;
+  padding: 0;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+}
+
+/* Al pasar el mouse, se ponen ROJOS */
+.player-center .player-controls .control-btn:hover {
+  color: #ff3b3b; 
+  transform: scale(1.1);
+}
+
+.player-center .player-controls .control-btn svg {
+  width: 18px;
+  height: 18px;
+  fill: currentColor;
+}
+
+/* Botón PLAY principal */
+.player-center .player-controls .control-btn-play {
+  background-color: #ff3b3b; /* Círculo rojo sólido */
+  border: none;
+  color: #fff; /* Icono blanco */
+  cursor: pointer;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s;
+  box-shadow: 0 0 10px rgba(255, 59, 59, 0.4);
+}
+
+.player-center .player-controls .control-btn-play:hover {
+  transform: scale(1.15);
+  background-color: #ff5252;
+}
+
+.player-center .player-controls .control-btn-play svg {
+  width: 18px;
+  height: 18px;
+  fill: currentColor;
+  margin-left: 2px; /* Ajuste visual para el triángulo de play */
+}
+
+/* --- Barra de Progreso --- */
+.player-center .progress-container {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+}
+
+.player-center .progress-container .time-current,
+.player-center .progress-container .time-total {
+  font-size: 0.7rem;
+  color: #888; /* Gris medio */
+  min-width: 35px;
+  text-align: center;
+  font-family: monospace;
+}
+
+.player-center .progress-container .progress-bar-container {
+  flex: 1;
+  position: relative;
+  padding: 5px 0; /* Aumentar área de click */
+}
+
+/* El fondo de la barra (Gris oscuro) */
+.player-center .progress-container .progress-bar-container .progress-bar-bg {
+  width: 100%;
+  height: 4px;
+  background-color: #333;
+  border-radius: 2px;
+  position: relative;
+  cursor: pointer;
+}
+
+/* La parte llena de la barra (ROJA) */
+.player-center .progress-container .progress-bar-container .progress-bar {
+  height: 100%;
+  background-color: #ff3b3b; /* Rojo */
+  border-radius: 2px;
+  position: relative;
+}
+
+/* La bolita al final de la barra */
+.player-center .progress-container .progress-bar-container .progress-bar::after {
+  content: '';
+  position: absolute;
+  right: -6px;
+  top: 50%;
+  transform: translate(0, -50%);
+  width: 12px;
+  height: 12px;
+  background-color: #fff;
+  border-radius: 50%;
+  opacity: 0; /* Se oculta si no pasas el mouse */
+  transition: opacity 0.2s;
+  box-shadow: 0 0 4px rgba(0,0,0,0.5);
+}
+
+/* Mostrar la bolita en hover */
+.player-center .progress-container .progress-bar-container:hover .progress-bar::after {
+  opacity: 1;
+}
+
+/* =========================================
+   DERECHA: VOLUMEN Y EXTRAS
+   ========================================= */
+.player-right {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 12px;
+}
+
+/* Iconos de la derecha (negro/oscuro sobre el fondo rojo para contraste) */
+.player-right .control-btn {
+  background: none;
+  border: none;
+  color: rgba(0, 0, 0, 0.7); /* Oscuro semi-transparente */
+  cursor: pointer;
+  padding: 0;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: color 0.2s, transform 0.2s;
+}
+
+.player-right .control-btn svg {
+  width: 20px;
+  height: 20px;
+  fill: currentColor;
+}
+
+.player-right .control-btn:hover {
+  color: #000; /* Negro total al hover */
+  transform: scale(1.1);
+}
+
+/* Barra de volumen */
+.player-right .volume-bar {
+  width: 100px;
+  position: relative;
+}
+
+.player-right .volume-bar .volume-bar-bg {
+  width: 100%;
+  height: 4px;
+  background-color: rgba(0,0,0,0.3); /* Fondo oscuro transparente */
+  border-radius: 2px;
+  cursor: pointer;
+  position: relative;
+}
+
+.player-right .volume-bar .volume-bar-fill {
+  height: 100%;
+  background-color: #fff; /* Relleno blanco */
+  border-radius: 2px;
+  position: relative;
+}
+
+.player-right .volume-bar .volume-bar-fill::after {
+  content: '';
+  position: absolute;
+  right: -5px;
+  top: 50%;
+  transform: translate(0, -50%);
+  width: 10px;
+  height: 10px;
+  background-color: #fff;
+  border-radius: 50%;
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+
+.player-right .volume-bar:hover .volume-bar-fill::after {
+  opacity: 1;
+}
+
+/* =========================================
+   RESPONSIVE (Móvil)
+   ========================================= */
+@media (max-width: 768px) {
+  .controls-container {
+    grid-template-columns: 1fr;
+    height: auto;
+    padding: 10px;
+    background-color: #0a0a0a; /* En móvil mejor todo negro */
+    border-top: 2px solid #ff3b3b;
+  }
+
+  .song-info {
+    justify-content: center;
+    margin-bottom: 10px;
+  }
+
+  .player-center {
+    background-color: transparent; /* Sin cápsula en móvil para ahorrar espacio */
+    padding: 0;
+    box-shadow: none;
+  }
+  
+  .player-right {
+    display: none;
+  }
+}

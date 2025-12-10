@@ -1,0 +1,356 @@
+/* =========================================
+   CONTENEDOR PRINCIPAL DEL BUSCADOR
+   ========================================= */
+.search-view {
+  display: flex;
+  flex-direction: column;
+  /* CORRECCIÓN CLAVE: Usamos 100% en lugar de 100vh para que respete al padre */
+  height: 100%;
+  width: 100%;
+  /* CORRECCIÓN CLAVE: Transparente para que se vea tu fondo negro global */
+  background-color: transparent;
+  color: white;
+  overflow: hidden;
+}
+
+/* =========================================
+   BARRA DE BÚSQUEDA (Parte Superior)
+   ========================================= */
+.search-bar-container {
+  padding: 20px 30px;
+  /* Fondo oscuro sólido para que tape el contenido al hacer scroll */
+  background-color: #0a0a0a; 
+  border-bottom: 1px solid #2a2a2a;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+/* Botón "Volver al Inicio" */
+.btn-back-home {
+  background: transparent;
+  border: 1px solid #333;
+  border-radius: 50px;
+  padding: 8px 16px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  color: #b3b3b3;
+  font-weight: 600;
+  font-size: 0.9rem;
+  transition: all 0.3s ease;
+}
+
+.btn-back-home:hover {
+  border-color: #ff3b3b; /* Rojo */
+  color: white;
+  background: rgba(255, 59, 59, 0.1);
+}
+
+/* Contenedor del Input */
+.search-input-wrapper {
+  flex: 1;
+  position: relative;
+}
+
+/* La caja de texto donde escribes */
+.search-input {
+  width: 100%;
+  padding: 12px 24px;
+  font-size: 1rem;
+  border: 1px solid transparent;
+  border-radius: 50px;
+  background-color: #242424; /* Gris oscuro */
+  color: white;
+  outline: none;
+  transition: all 0.3s ease;
+}
+
+.search-input::placeholder {
+  color: #777;
+}
+
+/* Al hacer click para escribir */
+.search-input:focus {
+  background-color: #333;
+  border-color: #ff3b3b; /* Borde Rojo */
+  box-shadow: 0 0 10px rgba(255, 59, 59, 0.2);
+}
+
+/* Botón "X" para borrar */
+.btn-clear-search {
+  position: absolute;
+  right: 15px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: transparent;
+  border: none;
+  color: #777;
+  cursor: pointer;
+}
+
+.btn-clear-search:hover {
+  color: white;
+}
+
+/* =========================================
+   SUGERENCIAS (AUTOCOMPLETADO)
+   ========================================= */
+.autocomplete-suggestions {
+  position: absolute;
+  top: calc(100% + 10px);
+  left: 0;
+  right: 0;
+  background: #1e1e1e;
+  border: 1px solid #333;
+  border-radius: 8px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.8);
+  z-index: 100;
+  overflow: hidden;
+}
+
+.suggestion-item {
+  padding: 12px 20px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  border-bottom: 1px solid #2a2a2a;
+  color: #ccc;
+}
+
+.suggestion-item:hover {
+  background-color: #333;
+  color: #ff3b3b; /* Texto rojo en hover */
+}
+
+/* =========================================
+   ÁREA DE RESULTADOS
+   ========================================= */
+.search-results-container {
+  flex: 1;
+  overflow-y: auto; /* Scroll vertical */
+  padding: 0;
+  background-color: transparent;
+}
+
+/* Scrollbar personalizada */
+.search-results-container::-webkit-scrollbar {
+  width: 8px;
+}
+.search-results-container::-webkit-scrollbar-track {
+  background: #0a0a0a;
+}
+.search-results-container::-webkit-scrollbar-thumb {
+  background: #333;
+  border-radius: 4px;
+}
+.search-results-container::-webkit-scrollbar-thumb:hover {
+  background: #ff3b3b;
+}
+
+.search-results {
+  padding: 30px;
+}
+
+/* Títulos de secciones (Artistas, Canciones...) */
+.section-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: white;
+  margin-top: 20px;
+  margin-bottom: 20px;
+  padding-bottom: 10px;
+  border-bottom: 2px solid #ff3b3b; /* Línea roja */
+  display: inline-block;
+}
+
+/* =========================================
+   GRID DE ARTISTAS
+   ========================================= */
+.artists-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 24px;
+}
+
+.artist-card {
+  background-color: #181818;
+  padding: 20px;
+  border-radius: 8px;
+  text-align: center;
+  transition: background-color 0.3s ease;
+  cursor: pointer;
+}
+
+.artist-card:hover {
+  background-color: #282828;
+}
+
+.artist-image {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%; /* Círculo */
+  object-fit: cover;
+  margin-bottom: 15px;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+}
+
+.artist-name {
+  font-weight: 700;
+  color: white;
+  margin-bottom: 5px;
+}
+
+.artist-type {
+  font-size: 0.8rem;
+  color: #ff3b3b; /* Rojo */
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+/* =========================================
+   LISTA DE CANCIONES
+   ========================================= */
+.tracks-grid {
+  display: grid;
+  gap: 12px;
+}
+
+.track-card {
+  display: flex;
+  align-items: center;
+  background-color: #181818;
+  padding: 10px 15px;
+  border-radius: 6px;
+  transition: all 0.2s ease;
+  cursor: pointer;
+  border-left: 4px solid transparent;
+}
+
+.track-card:hover {
+  background-color: #2a2a2a;
+  border-left-color: #ff3b3b; /* Borde izquierdo rojo */
+}
+
+.track-image {
+  width: 50px;
+  height: 50px;
+  border-radius: 4px;
+  margin-right: 15px;
+}
+
+.track-info {
+  flex: 1;
+}
+
+.track-name {
+  color: white;
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+
+.track-artist {
+  color: #999;
+  font-size: 0.9rem;
+}
+
+/* Botón Play pequeño en la lista */
+.btn-play-track {
+  width: 35px;
+  height: 35px;
+  border-radius: 50%;
+  background: #ff3b3b;
+  border: none;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: all 0.2s;
+  cursor: pointer;
+}
+
+.track-card:hover .btn-play-track {
+  opacity: 1;
+}
+
+/* =========================================
+   GRID DE ÁLBUMES
+   ========================================= */
+.albums-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 24px;
+}
+
+.album-card {
+  background-color: #181818;
+  padding: 16px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.album-card:hover {
+  background-color: #282828;
+}
+
+.album-image {
+  width: 100%;
+  aspect-ratio: 1/1;
+  object-fit: cover;
+  border-radius: 6px;
+  margin-bottom: 12px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+}
+
+.album-name {
+  color: white;
+  font-weight: 700;
+  margin-bottom: 6px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.album-artist {
+  color: #999;
+  font-size: 0.9rem;
+}
+
+/* =========================================
+   ESTADOS VACÍOS (LOADING / ERROR)
+   ========================================= */
+.loading-container, .empty-state, .no-results {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 20px;
+  text-align: center;
+}
+
+.spinner {
+  border: 4px solid rgba(255,255,255,0.1);
+  border-top-color: #ff3b3b; /* Spinner rojo */
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin { to { transform: rotate(360deg); } }
+
+.empty-icon, .no-results-icon {
+  font-size: 4rem;
+  margin-bottom: 20px;
+  color: #333;
+}
+
+h2 { color: white; margin-bottom: 10px; }
+p { color: #888; }

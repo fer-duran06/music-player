@@ -1,0 +1,21 @@
+/* styles.css - Variables Globales */
+:root {
+  /* Color de fondo principal (Gris oscuro de tu diseño) */
+  --main-bg-color: #121212;
+  /* Color de fondo secundario (para el sidebar o tarjetas) */
+  --secondary-bg-color: #181818;
+  /* Tu color de acento (el rojo/rosa intenso) */
+  --accent-color: #E91E63; /* Puedes ajustar este hexa si no es exacto */
+  /* Color de texto principal */
+  --text-primary: #FFFFFF;
+  /* Color de texto secundario (grisaseo) */
+  --text-secondary: #B3B3B3;
+}
+
+html, body {
+    height: 100%;
+    margin: 0;
+    font-family: sans-serif; /* Después podemos buscar una fuente mejor */
+    background-color: var(--main-bg-color); /* Aplicamos el fondo oscuro */
+    color: var(--text-primary); /* Texto blanco por defecto */
+}
